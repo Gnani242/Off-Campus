@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard – Off-Campus Job Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Off-Campus Jobs</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="dashboard.html">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="jobs.html">Jobs</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container my-4">
+    <h2 class="mb-4">My Dashboard</h2>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Summary</h5>
+                    <p class="small text-muted mb-1"><strong>Name:</strong> <span id="profile-name">Job Seeker</span></p>
+                    <p class="small text-muted mb-1"><strong>Preferred Location:</strong> <span id="profile-location">Not set</span></p>
+                    <p class="small text-muted"><strong>Skills:</strong> <span id="profile-skills">Not set</span></p>
+                    <p class="small text-muted">Profile data is loaded from backend API (to be wired).</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Recommended Jobs</h5>
+                    <div id="recommended-jobs" class="list-group small">
+                        <!-- filled by JS -->
+                    </div>
+                    <p id="recommended-empty" class="text-muted mb-0 d-none">
+                        No recommendations yet. Once backend API is wired, jobs matching your skills will appear here.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/api.js"></script>
+<script>
+if (window.JobApi && typeof JobApi.fetchRecommendedJobs === 'function') {
+    JobApi.fetchRecommendedJobs()
+        .then(items => {
+            const container = document.getElementById('recommended-jobs');
+            const empty = document.getElementById('recommended-empty');
+            if (!items || items.length === 0) {
+                empty.classList.remove('d-none');
+                return;
+            }
+            items.forEach(item => {
+                const job = item.job || item; // allow (job, match) like API
+                const match = item.match || item.match_percentage || '';
+                const div = document.createElement('div');
+                div.className = 'list-group-item';
+                div.innerHTML = `<div class="d-flex w-100 justify-content-between">
+                    <strong>${job.title}</strong>
+                    <small class="text-success">${match ? match + '% match' : ''}</small>
+                </div>
+                <small class="text-muted">${job.company_name} · ${job.location || ''}</small>`;
+                container.appendChild(div);
+            });
+        })
+        .catch(() => {
+            document.getElementById('recommended-empty').classList.remove('d-none');
+        });
+} else {
+    document.getElementById('recommended-empty').classList.remove('d-none');
+}
+</script>
+</body>
+</html>
+
