@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Recommended Jobs - Off-Campus Job Portal{% endblock %}
+{% block content %}
+<h2 class="mb-3">Recommended Jobs for You</h2>
+
+<div class="list-group mb-3">
+    {% for job, match in page_obj.object_list %}
+        <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ job.title }} at {{ job.company_name }}</h5>
+                <small class="text-success fw-bold">{{ match }}% match</small>
+            </div>
+            <p class="mb-1 text-muted">{{ job.location }}</p>
+            <p class="mb-1"><strong>Required skills:</strong> {{ job.required_skills }}</p>
+            <div class="d-flex justify-content-between align-items-center mt-1">
+                <a href="{{ job.job_link }}" target="_blank" class="btn btn-sm btn-outline-primary">View Job</a>
+                <a href="{% url 'apply_to_job' job.id %}" class="btn btn-sm btn-success">Apply & Track</a>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">No matching jobs yet. Update your skills and preferred location in your profile.</p>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+            <li class="page-item disabled">
+                <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Profile - Off-Campus Job Portal{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <h2 class="mb-3 text-center">My Profile</h2>
+        <form method="post" enctype="multipart/form-data" class="card card-body shadow-sm">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100 mt-2">Save Profile</button>
+        </form>
+        {% if user.resume %}
+            <p class="mt-3">
+                <strong>Current Resume:</strong>
+                <a href="{{ user.resume.url }}" target="_blank">View / Download</a>
+            </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

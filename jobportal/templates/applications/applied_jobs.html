@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}My Applications - Off-Campus Job Portal{% endblock %}
+{% block content %}
+<h2 class="mb-3">My Applications</h2>
+
+<div class="list-group">
+    {% for app in applications %}
+        <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ app.job.title }} at {{ app.job.company_name }}</h5>
+                <small class="text-muted">{{ app.applied_date }}</small>
+            </div>
+            <p class="mb-1 text-muted">{{ app.job.location }}</p>
+            <p class="mb-1">
+                <strong>Status:</strong>
+                <span class="badge bg-secondary text-capitalize">{{ app.status }}</span>
+            </p>
+            <a href="{{ app.job.job_link }}" target="_blank" class="btn btn-sm btn-outline-primary mt-1">View Job</a>
+        </div>
+    {% empty %}
+        <p class="text-muted">You have not applied for any jobs yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+

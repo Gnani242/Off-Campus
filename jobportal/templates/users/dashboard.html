@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Off-Campus Job Portal{% endblock %}
+{% block content %}
+<h2 class="mb-4">Welcome, {{ user.full_name|default:user.username }}</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Profile</h5>
+                <p class="card-text mb-1"><strong>Email:</strong> {{ user.email }}</p>
+                <p class="card-text mb-1"><strong>Preferred Location:</strong> {{ user.preferred_location|default:"Not set" }}</p>
+                <p class="card-text"><strong>Skills:</strong> {{ user.skills|default:"Add your skills for better matches" }}</p>
+                <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-sm mt-2">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Recommended Jobs</h5>
+                {% if recommended_jobs %}
+                    <div class="list-group">
+                        {% for job, match in recommended_jobs %}
+                            <a href="{{ job.job_link }}" target="_blank" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ job.title }} at {{ job.company_name }}</h6>
+                                    <small class="text-success fw-bold">{{ match }}% match</small>
+                                </div>
+                                <p class="mb-1 text-muted">{{ job.location }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'recommended_jobs' %}" class="btn btn-link mt-2 ps-0">View all recommendations</a>
+                {% else %}
+                    <p class="text-muted mb-0">No recommendations yet. Add your skills and preferred location in your profile.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
